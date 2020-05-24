@@ -4,7 +4,9 @@
   "description": "readme",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=dev nodemon ./bin/www.js",
+    "prd": "cross-env NODE_ENV=production nodemon ./bin/www.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,6 @@
     "url": "https://github.com/zhengyh99/nodejs/issues"
   },
   "homepage": "https://github.com/zhengyh99/nodejs#readme",
-  "dependencies": {},
   "devDependencies": {
     "cross-env": "^7.0.2",
     "nodemon": "^2.0.4"

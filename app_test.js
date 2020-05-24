@@ -4,9 +4,6 @@ const querystring = require('querystring')
 const server = http.createServer((req, res) => {
     //请求方法
     console.log('method:', req.method)
-
-
-    console.log(req.query)
     if (req.method == 'POST') {
         console.log('content-type:', req.headers['content-type'])
         let postdata = ''
