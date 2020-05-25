@@ -25,7 +25,7 @@ const newBlog = (blogData = {}) => {
     let sql = `insert into blogs (title,content,createtime,author) values('${title}','${content}',${now},'${author}')`
     console.log('sql:', sql)
     return exec(sql).then(resd => {
-        console.log("insert info:",res)
+        console.log("insert info:", res)
         return { id: resd.insertId }
     })
 }
@@ -48,14 +48,26 @@ const updBlog = (blogData = {}) => {
     }
     let sql = `update blogs set ${sets} where id=${id}`
     console.log('sql:', sql)
-    return exec(sql)
+    return exec(sql).then(res => {
+        console.log('update info:', res)
+        if (res.affectedRows > 0) {
+            return true
+        }
+        return false
+    })
 }
 
 const delBlog = (id => {
     console.log("delete blog No: ", id)
     let sql = `delete from  blogs where id=${id}`
     console.log('sql:', sql)
-    return exec(sql)
+    return exec(sql).then(res => {
+        console.log('delete info:', res)
+        if (res.affectedRows > 0) {
+            return true
+        }
+        return false
+    })
 })
 
 module.exports = { getlist, getDetail, newBlog, updBlog, delBlog }

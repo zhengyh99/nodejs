@@ -41,22 +41,31 @@ const handleBlogRouter = (req, res) => {
     if (method === 'POST' && req.path === '/api/blog/update') {
         console.log('/api/blog/update')
         return updBlog(req.body)
-        .then(res => {
-            return new SuccessModel(res)
-        })
-        .catch(err => {
-            return new ErrorModel('数据更新失败！')
-        })
+            .then(res => {
+                if (res) {
+                    return new SuccessModel(res)
+                } else {
+                    return new ErrorModel('数据更新失败！')
+                }
+
+            })
+            .catch(err => {
+                return new ErrorModel('数据更新失败！')
+            })
     }
     if (method === 'POST' && req.path === '/api/blog/del') {
         console.log('/api/blog/del')
         return delBlog(req.body.id)
-        .then(res => {
-            return new SuccessModel(res)
-        })
-        .catch(err => {
-            return new ErrorModel('数据删除失败！')
-        })
+            .then(res => {
+                if (res) {
+                    return new SuccessModel(res)
+                } else {
+                    return new ErrorModel('数据删除失败！')
+                }
+            })
+            .catch(err => {
+                return new ErrorModel('数据删除失败！')
+            })
     }
 }
 

@@ -55,15 +55,10 @@ const serverHandle = (req, res) => {
         //user 路由分支
         const userData = userRouter(req, res)
         if (userData) {
-            userData.then(rdata => {
-                console.log('rdata:', rdata)
-                res.writeHeader(404, { 'Content-type': 'text/plain' })
-                if (rdata.data.length > 0) { 
-                    res.write('登陆成功')
-                } else {
-                    res.write('登陆失败')
-                }
-                res.end()
+            userData.then(rdata => {     
+                res.end(
+                    JSON.stringify(rdata)
+                )
             })
             return
         }
