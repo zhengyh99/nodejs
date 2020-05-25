@@ -1,47 +1,61 @@
+const { exec } = require('../db/mysql')
+
 const getlist = (author, keyword) => {
-    return [
-        {
-            id: 1,
-            title: "标题A",
-            content: "内容A",
-            createTime: 1590248780801,
-            author: "作家A"
-        },
-        {
-            id: 2,
-            title: "标题B",
-            content: "内容B",
-            createTime: 1590248895845,
-            author: "作家B"
-        }
-    ]
+    let sql = `select * from blogs where 1=1 `
+    if (author) {
+        sql += `and author='${author}' `
+    }
+    if (keyword) {
+        sql += `and title like '%${keyword}%'`
+    }
+    console.log('sql:', sql)
+    return exec(sql)
 }
 
 const getDetail = (id) => {
-    return {
-        id: 1,
-        title: "标题A",
-        content: "内容A",
-        createTime: 1590248780801,
-        author: "作家A"
-    }
+    let sql = `select * from blogs where id=${id}`
+    console.log('sql:', sql)
+    return exec(sql)
 }
 
 const newBlog = (blogData = {}) => {
     console.log("blog data:", blogData)
-    return {
-        id: 3
+    const { title, content, author } = blogData
+    const now = new Date().getTime()
+    let sql = `insert into blogs (title,content,createtime,author) values('${title}','${content}',${now},'${author}')`
+    console.log('sql:', sql)
+    return exec(sql).then(resd => {
+        console.log("insert info:",res)
+        return { id: resd.insertId }
+    })
+}
+
+const updBlog = (blogData = {}) => {
+    console.log("update blog:", blogData)
+    const { id, title, content, author } = blogData
+    let sets = ''
+
+    if (title) {
+        sets += `title='${title}'`
+    } else {
+        sets += 'title=title'
     }
+    if (content) {
+        sets += `,content='${content}'`
+    }
+    if (author) {
+        sets += `,author='${author}'`
+    }
+    let sql = `update blogs set ${sets} where id=${id}`
+    console.log('sql:', sql)
+    return exec(sql)
 }
 
-const updBlog = (id, blogData = {}) => {
-    console.log("update blog:", id, blogData)
-    return false
-}
-
-const delBlog = (id=>{
-    console.log("delete blog No: ",id)
-    return false
+const delBlog = (id => {
+    console.log("delete blog No: ", id)
+    let sql = `delete from  blogs where id=${id}`
+    console.log('sql:', sql)
+    return exec(sql)
 })
 
 module.exports = { getlist, getDetail, newBlog, updBlog, delBlog }

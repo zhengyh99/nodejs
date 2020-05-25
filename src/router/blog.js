@@ -1,42 +1,62 @@
-const { getlist, getDetail, newBlog, updBlog,delBlog } = require('../controller/blog')
+const { getlist, getDetail, newBlog, updBlog, delBlog } = require('../controller/blog')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
 const handleBlogRouter = (req, res) => {
     //解析请求方法
     const method = req.method
+    console.log('method:', method, '\n path:', req.path)
     if (method === 'GET' && req.path === '/api/blog/list') {
         const author = req.query.author || ''
         const keyword = req.query.keyword || ''
-        const listData = getlist(author, keyword)
-        return new SuccessModel(listData)
+        return getlist(author, keyword)
+            .then(res => {
+                return new SuccessModel(res)
+            })
+            .catch(err => {
+                return new ErrorModel(err)
+            })
+
     }
     if (method === 'GET' && req.path === '/api/blog/detail') {
 
-        const data = getDetail(req.body)
-        return new SuccessModel(data)
+        return getDetail(req.query.id)
+            .then(res => {
+                return new SuccessModel(res)
+            })
+            .catch(err => {
+                return new ErrorModel('无数据')
+            })
+
     }
     if (method === 'POST' && req.path === '/api/blog/new') {
         console.log("/api/blog/new")
-        const data = newBlog(req.body)
-        return new SuccessModel(data)
+        return newBlog(req.body)
+            .then(res => {
+                return new SuccessModel(res)
+            })
+            .catch(err => {
+                return new ErrorModel('数据插入失败！')
+            })
     }
     if (method === 'POST' && req.path === '/api/blog/update') {
         console.log('/api/blog/update')
-        const data = updBlog(1, req.body)
-        if (data) {
-            return new SuccessModel('更新成功！')
-        } else {
-            return new ErrorModel('更新失败')
-        }
+        return updBlog(req.body)
+        .then(res => {
+            return new SuccessModel(res)
+        })
+        .catch(err => {
+            return new ErrorModel('数据更新失败！')
+        })
     }
     if (method === 'POST' && req.path === '/api/blog/del') {
         console.log('/api/blog/del')
-        const data = delBlog(2)
-        if (data){
-            return new SuccessModel('删除成功！')
-        }else{
-            return new ErrorModel('删除失败！')
-        }
+        return delBlog(req.body.id)
+        .then(res => {
+            return new SuccessModel(res)
+        })
+        .catch(err => {
+            return new ErrorModel('数据删除失败！')
+        })
     }
 }
 
