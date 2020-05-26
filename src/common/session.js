@@ -1,6 +1,7 @@
 const { getExpires } = require("./cookie")
+const SESSION_DATA = {}
 const initSession = (req, res) => {
-    const sessionId = req.cookie.sessionId
+    let sessionId = req.cookie.sessionId
     if (sessionId) {
         if (!SESSION_DATA[sessionId]) {
             SESSION_DATA[sessionId] = {}
