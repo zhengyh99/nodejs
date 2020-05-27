@@ -57,9 +57,10 @@ const updBlog = (blogData = {}) => {
     })
 }
 
-const delBlog = (id => {
+const delBlog = ((blogdata={}) => {
+    const { id, author } = blogData
     console.log("delete blog No: ", id)
-    let sql = `delete from  blogs where id=${id}`
+    let sql = `delete from  blogs where id=${id} and author ='${author}'`
     console.log('sql:', sql)
     return exec(sql).then(res => {
         console.log('delete info:', res)

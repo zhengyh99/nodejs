@@ -1,6 +1,10 @@
 const { getlist, getDetail, newBlog, updBlog, delBlog } = require('../controller/blog')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
-
+const loginCheck = (req)=>{
+    if(!req.session.username){
+        return Promise.resolve( new ErrorModel('尚未登陆'))
+    }
+}
 const handleBlogRouter = (req, res) => {
     //解析请求方法
     const method = req.method
@@ -30,6 +34,11 @@ const handleBlogRouter = (req, res) => {
     }
     if (method === 'POST' && req.path === '/api/blog/new') {
         console.log("/api/blog/new")
+        const loginCheckResult = loginCheck(req)
+        if(loginCheckResult){
+            return loginCheckResult
+        }
+        req.body.author = req.session.username
         return newBlog(req.body)
             .then(res => {
                 return new SuccessModel(res)
@@ -40,6 +49,11 @@ const handleBlogRouter = (req, res) => {
     }
     if (method === 'POST' && req.path === '/api/blog/update') {
         console.log('/api/blog/update')
+        const loginCheckResult = loginCheck(req)
+        if(loginCheckResult){
+            return loginCheckResult
+        }
+        req.body.author = req.session.username
         return updBlog(req.body)
             .then(res => {
                 if (res) {
@@ -55,7 +69,12 @@ const handleBlogRouter = (req, res) => {
     }
     if (method === 'POST' && req.path === '/api/blog/del') {
         console.log('/api/blog/del')
-        return delBlog(req.body.id)
+        const loginCheckResult = loginCheck(req)
+        if(loginCheckResult){
+            return loginCheckResult
+        }
+        req.body.author = req.session.username
+        return delBlog(req.body)
             .then(res => {
                 if (res) {
                     return new SuccessModel(res)

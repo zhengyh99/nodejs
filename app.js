@@ -13,8 +13,7 @@ const serverHandle = (req, res) => {
     req.path = url.split('?')[0]
     //解析网站请求
     req.query = queryString.parse(url.split('?')[1])
-    //格式化cookie对象
-    initCookie(req)
+
     //初始化session
     initSession(req,res)
     //获取post数据 
