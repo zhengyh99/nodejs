@@ -2,10 +2,11 @@ const blogRouter = require('./src/router/blog')
 const userRouter = require('./src/router/user')
 const queryString = require('querystring')
 const { getPostData } = require('./src/common/post')
-const { initCookie } = require('./src/common/cookie')
 const { initSession } = require('./src/common/session')
+const {accessLog} = require('./src/common/log')
 
 const serverHandle = (req, res) => {
+    accessLog(`${req.method}--${req.url}--${req.headers['user-agent']}--${Date()}`)
     //设置响应头
     res.setHeader('Content-type', 'application/json')
     const url = req.url
@@ -35,8 +36,10 @@ const serverHandle = (req, res) => {
         }
         //user 路由分支
         const userData = userRouter(req, res)
+        console.log("user data:::::::",userData)
         if (userData) {
             userData.then(rdata => {
+                console.log("rdata2:", rdata)
                 res.end(
                     JSON.stringify(rdata)
                 )
